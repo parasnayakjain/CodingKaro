@@ -1,0 +1,36 @@
+
+<%- include("header") %>
+       
+<div class="box" id="heading">
+    <h1> <%= title %></h1>
+</div>
+  
+<div class="box">
+    
+        <% todos.forEach((todo)=>{ %>
+            <form action=<%= "/delete" + rout %> method="post">
+            <div class="item">
+               
+                 <input type="checkBox" name=checkBox value="<%= todo._id %>" onchange="this.form.submit()">
+                    <p> <%= todo.name %> </p>
+                
+            </div>
+        </form>
+       <% }) %>
+
+    
+
+    <form class="item" action=<%= rout %>  method="post">
+        <input type="text" name="todo" placeholder="KucH NAYA HO JAYE" >
+        <button type="submit" >+</button>
+    </form>
+</div>
+
+
+ 
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</body>
+
+</html>
