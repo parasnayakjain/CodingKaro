@@ -8,6 +8,13 @@ const time=require(__dirname+"/time.js");
 app.use(bp.urlencoded({extended:true}))
 app.set("view engine","ejs");
 app.use(express.static("public"));
+app.use(express.static(__dirname + '/public'));
+
+const {todoSchema, Todo,listString}=require( "./string.js");
+
+// 
+// listString=[];
+console.log(listString);
 var todos=["Take Bath","Study","Mandir","Eat"];
 var worktodos=[];
 var day=time.day;
@@ -15,13 +22,17 @@ var store=[];
 
 mongoose.connect("mongodb+srv://Paras:Paras%402001@cluster0.9t5bt.mongodb.net/todoDB")
 var conn = mongoose.connection;
-const todoSchema={
-    name:String
-};
+// const todoSchema={
+    
+//     name:String,
+//     gfgURL:String,
+//     isDone:Boolean,
 
-const Todo= mongoose.model(
-    "Todo",todoSchema
-);
+// };
+
+// const Todo= mongoose.model(
+//     "Todo",todoSchema
+// );
 
 const todo1=new Todo({name:"Take Bath"});
 const todo2 =new Todo({name:"Study"});
@@ -78,7 +89,7 @@ app.get("/:id",(req,res)=>{
             else {
                 const list=new List({
                     name:id,
-                    items:arrayc
+                    items:listString
                 });
                 list.save();
                 res.redirect("/"+id);
@@ -116,4 +127,24 @@ app.post("/delete/:id",(req,res)=>{
         res.redirect("/"+id);
 })
 
+app.get("/:id/string",(req,res)=>{
+    
+    
+    var id=req.params.id;
+  
+    List.findOne({name:(id+"string")},(err,foundList)=>{
+        if(err) console.log(err)
+        else{ if(foundList){ console.log(foundList.items);res.render("list",{title:"string",todos:foundList.items, rout:"/"+id+"/string"})}
+            else {
+                const list=new List({
+                    name:(id+"string"),
+                    items:listString
+                });
+                
+                list.save();
+                res.redirect("/"+id +"/string");
+            }} 
+
+    })
+})
 app.listen(process.env.PORT||3000,()=>{});

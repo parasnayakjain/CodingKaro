@@ -1,6 +1,7 @@
 
 <%- include("header") %>
-       
+  
+<link rel='stylesheet' href='/style.css' />
 <div class="box" id="heading">
     <h1> <%= title %></h1>
 </div>
@@ -12,7 +13,7 @@
             <div class="item">
                
                  <input type="checkBox" name=checkBox value="<%= todo._id %>" onchange="this.form.submit()">
-                    <p> <%= todo.name %> </p>
+                    <p><a href=<%=todo.gfgURL %> > <%= todo.name %> </a> </p>
                 
             </div>
         </form>
@@ -30,7 +31,6 @@
  
   
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 </body>
 
 </html>
