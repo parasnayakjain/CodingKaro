@@ -56,7 +56,8 @@ app.get("/",(req,res)=>{
             Todo.insertMany(arrayc ,()=>{});
             console.log("Hello");
         }
-    res.render("list",{title:("Today is "+day() ) ,todos:array,rout:"/"});
+    // res.render("list",{title:("Today is "+day() ) ,todos:array,rout:"/"});
+    res.render("signIn");
     })
 })
 
