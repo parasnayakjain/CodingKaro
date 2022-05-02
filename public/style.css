@@ -102,3 +102,9 @@ html {
     color: rgba(0, 0, 0, 0.5);
     text-align: center;
   }
+  a{
+    display: block;
+    text-align: center;
+    color: #00204a;
+    font-size: large;
+  }

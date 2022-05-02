@@ -22,5 +22,6 @@ const Todo= mongoose.model(
     }
  );
 
-listString=[Todo12];
-module.exports = {Todo, todoSchema , listString } ;
+string=[Todo12];
+const dsa={"string":string ,"array":[], "matrix":[]};
+module.exports = {Todo, todoSchema , dsa } ;

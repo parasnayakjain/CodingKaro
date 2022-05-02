@@ -13,26 +13,21 @@ const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID="196256140389-eub6bqb3jiikg7kei2fn2ooulsvq9ffv.apps.googleusercontent.com";
+const CLIENT_ID="346034995979-rc78oggnhmhcg68t4eo0kbl7enhite2p.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
-const {todoSchema, Todo,listString}=require( "./string.js");
+const {todoSchema, Todo, dsa}=require( "./dsa.js");
 
 var baccha;
-console.log(listString);
-var todos=["Take Bath","Study","Mandir","Eat"];
-var worktodos=[];
-var day=time.day;
-var store=[];
+console.log(dsa);
+
 
 mongoose.connect("mongodb+srv://Paras:Paras%402001@cluster0.9t5bt.mongodb.net/todoDB")
 var conn = mongoose.connection;
 
 
-const todo1=new Todo({name:"Take Bath"});
-const todo2 =new Todo({name:"Study"});
-const todo3= new Todo({name:"Mandir"});
 
-const arrayc=[todo1, todo2, todo3];
+
+
 const listSchema={
  name:String,
  items:[todoSchema]
@@ -43,24 +38,11 @@ const List=mongoose.model("List",listSchema);
 
 
 app.get("/",(req,res)=>{
-    Todo.find((err,array)=>{
-        
-        if((array).length==0)
-        {
-            Todo.insertMany(arrayc ,()=>{});
-            console.log("Hello");
-        }
-    // res.render("list",{title:("Today is "+day() ) ,todos:array,rout:"/"});
+
     res.render("signIn");
-    })
+    
 })
 
-app.post("/",(req,res)=>{
-    console.log("hello");
-    var todon=new Todo({name:req.body.todo})
-    todon.save();
-    res.redirect("/");
-})
 
 
 app.post("/login" , (req, res)=>{
@@ -89,113 +71,44 @@ app.post("/login" , (req, res)=>{
 })
 
 
-app.post("/delete",(req,res)=>{
- 
-   a=req.body;
-   b=a.checkBox;
-  Todo.findByIdAndDelete(b ,(err,res)=>{
-        if(err) {console.log(err)}
-        else {console.log("deleted")}
-    })
-   
-   res.redirect("/");
-    //Todo.deleteOne({name:})
-})
+
 
 app.get("/profile",checkAuthenticated,(req,res)=>{
 
    let user=req.user;
+    
+   res.render("profile" ,{title:user.name});
 
-    List.findOne({name:user.name},(err,foundList)=>{
-        if(err) console.log(err)
-        else{ if(foundList){res.render("list",{title:user.name,todos:foundList.items,rout:("/")})}
-            else {
-                const list=new List({
-                    name:user.name,
-                    items:listString
-                });
-                list.save();
-                res.redirect("/profile");
-            }} 
-
-    })
    
 })
 
-app.post("/:id",(req,res)=>{
+
+
+
+
+app.get("/:id",checkAuthenticated,(req,res)=>{
     
     var id=req.params.id;
-    var todon=new Todo({name:req.body.todo})
-    List.findOne({name:id},(err,foundList)=>{
-        if(foundList){
-            foundList.items.push(todon);
-            foundList.save();
-         
-        }
-    })
-    res.redirect(("/"+id))
-   
-})
-
-app.post("/delete/:id",(req,res)=>{
-    var id=req.params.id;
-    a=req.body;
-    b=a.checkBox;
-    List.findOneAndUpdate({name:id},
-        {$pull : { items : { _id :b}}},
-        
-        (err,foundList)=>{
-
-        })
-        res.redirect("/"+id);
-})
-
-app.get("/:id/string",(req,res)=>{
-    
-    
-    var id=req.params.id;
-  
-    List.findOne({name:(id+"string")},(err,foundList)=>{
+    let user=req.user;
+    var id1=user.sub;
+     console.log(dsa[id])
+    List.findOne({name:(id1+id)},(err,foundList)=>{
         if(err) console.log(err)
-        else{ if(foundList){ console.log(foundList.items);res.render("list",{title:"string",todos:foundList.items, rout:"/"+id+"/string"})}
+        else{ if(foundList){ console.log(foundList.items);res.render("list",{title:id,todos:foundList.items, rout:"/"+id})}
             else {
                 const list=new List({
-                    name:(id+"string"),
-                    items:listString
+                    name:(id1+id),
+                    items:dsa[id]
                 });
                 
                 list.save();
-                res.redirect("/"+id +"/string");
+                res.redirect("/"+id);
             }} 
 
     })
 })
 
-function checkAuthenticated(req, res, next){
 
-    let token = req.cookies['session-token'];
-
-    let user = {};
-    async function verify() {
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
-        });
-        const payload = ticket.getPayload();
-        user.name = payload.name;
-        user.email = payload.email;
-        user.picture = payload.picture;
-      }
-      verify()
-      .then(()=>{
-          req.user = user;
-          next();
-      })
-      .catch(err=>{
-          res.redirect('/login')
-      })
-
-}
 
 function checkAuthenticated(req, res, next){
 
@@ -211,6 +124,7 @@ function checkAuthenticated(req, res, next){
         user.name = payload.name;
         user.email = payload.email;
         user.picture = payload.picture;
+        user.sub=payload.sub;
       }
       verify()
       .then(()=>{
