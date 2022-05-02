@@ -9,11 +9,14 @@ app.use(bp.urlencoded({extended:true}))
 app.set("view engine","ejs");
 app.use(express.static("public"));
 app.use(express.static(__dirname + '/public'));
-
+app.use(express.json());
+app.use(cookieParser());
+const {OAuth2Client} = require('google-auth-library');
+const CLIENT_ID="196256140389-eub6bqb3jiikg7kei2fn2ooulsvq9ffv.apps.googleusercontent.com";
+const client = new OAuth2Client(CLIENT_ID);
 const {todoSchema, Todo,listString}=require( "./string.js");
 
-// 
-// listString=[];
+
 console.log(listString);
 var todos=["Take Bath","Study","Mandir","Eat"];
 var worktodos=[];
@@ -22,17 +25,7 @@ var store=[];
 
 mongoose.connect("mongodb+srv://Paras:Paras%402001@cluster0.9t5bt.mongodb.net/todoDB")
 var conn = mongoose.connection;
-// const todoSchema={
-    
-//     name:String,
-//     gfgURL:String,
-//     isDone:Boolean,
 
-// };
-
-// const Todo= mongoose.model(
-//     "Todo",todoSchema
-// );
 
 const todo1=new Todo({name:"Take Bath"});
 const todo2 =new Todo({name:"Study"});
@@ -67,6 +60,24 @@ app.post("/",(req,res)=>{
     todon.save();
     res.redirect("/");
 })
+
+app.post("/login" , (req, res)=>{
+    let token =req.body.token;
+
+
+   
+        async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID,  
+        });
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+        console.log(payload);
+        }
+        verify().catch(console.error);
+})
+
 
 app.post("/delete",(req,res)=>{
  
