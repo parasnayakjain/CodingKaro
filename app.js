@@ -77,6 +77,8 @@ app.post("/login" , (req, res)=>{
         console.log(payload);
         }
         verify().catch(console.error);
+
+        res.redirect("/a");
 })
 
 
