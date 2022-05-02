@@ -9,6 +9,7 @@ app.use(bp.urlencoded({extended:true}))
 app.set("view engine","ejs");
 app.use(express.static("public"));
 app.use(express.static(__dirname + '/public'));
+const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
