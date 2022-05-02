@@ -13,11 +13,11 @@ const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID="196256140389-eub6bqb3jiikg7kei2fn2ooulsvq9ffv.apps.googleusercontent.com";
+const CLIENT_ID="346034995979-rc78oggnhmhcg68t4eo0kbl7enhite2p.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
 const {todoSchema, Todo,listString}=require( "./string.js");
 
-
+var baccha;
 console.log(listString);
 var todos=["Take Bath","Study","Mandir","Eat"];
 var worktodos=[];
@@ -62,11 +62,12 @@ app.post("/",(req,res)=>{
     res.redirect("/");
 })
 
+
 app.post("/login" , (req, res)=>{
     let token =req.body.token;
 
 
-   
+    console.log("2"+token);
         async function verify() {
         const ticket = await client.verifyIdToken({
             idToken: token,
@@ -74,11 +75,17 @@ app.post("/login" , (req, res)=>{
         });
         const payload = ticket.getPayload();
         const userid = payload['sub'];
+        baccha=payload;
         console.log(payload);
         }
-        verify().catch(console.error);
+        verify().
+        then(()=>{
+          res.cookie('session-token', token);
+          res.send("ok");
+        })
+        .catch(console.error);
 
-        res.redirect("/a");
+        
 })
 
 
@@ -95,19 +102,20 @@ app.post("/delete",(req,res)=>{
     //Todo.deleteOne({name:})
 })
 
-app.get("/:id",(req,res)=>{
-    var id=req.params.id;
+app.get("/profile",checkAuthenticated,(req,res)=>{
 
-    List.findOne({name:id},(err,foundList)=>{
+   let user=req.user;
+
+    List.findOne({name:user.name},(err,foundList)=>{
         if(err) console.log(err)
-        else{ if(foundList){res.render("list",{title:id,todos:foundList.items,rout:("/"+id)})}
+        else{ if(foundList){res.render("list",{title:user.name,todos:foundList.items,rout:("/")})}
             else {
                 const list=new List({
-                    name:id,
+                    name:user.name,
                     items:listString
                 });
                 list.save();
-                res.redirect("/"+id);
+                res.redirect("/profile");
             }} 
 
     })
@@ -162,4 +170,58 @@ app.get("/:id/string",(req,res)=>{
 
     })
 })
+
+function checkAuthenticated(req, res, next){
+
+    let token = req.cookies['session-token'];
+
+    let user = {};
+    async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+        });
+        const payload = ticket.getPayload();
+        user.name = payload.name;
+        user.email = payload.email;
+        user.picture = payload.picture;
+      }
+      verify()
+      .then(()=>{
+          req.user = user;
+          next();
+      })
+      .catch(err=>{
+          res.redirect('/login')
+      })
+
+}
+
+function checkAuthenticated(req, res, next){
+
+    let token = req.cookies['session-token'];
+
+    let user = {};
+    async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+        });
+        const payload = ticket.getPayload();
+        user.name = payload.name;
+        user.email = payload.email;
+        user.picture = payload.picture;
+      }
+      verify()
+      .then(()=>{
+          req.user = user;
+          next();
+      })
+      .catch(err=>{
+          res.redirect('/login')
+      })
+
+};
+
+
 app.listen(process.env.PORT||3000,()=>{});
