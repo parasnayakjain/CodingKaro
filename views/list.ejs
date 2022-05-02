@@ -10,10 +10,10 @@
   
 <div class="box">
     
-        <% todos.forEach((todo)=>{ %>
+        <% if(array) array.forEach((e)=>{ %>
             <div class="item">
               
-                    <p><a href=<%=todo.gfgURL %> > <%= todo.name %> </a> </p>
+                    <p><a href=<%=e.gfgURL %> > <%= e.name %> </a> </p>
             </div>
         <% }) %>
 

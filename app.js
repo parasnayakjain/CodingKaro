@@ -13,27 +13,14 @@ const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID="196256140389-eub6bqb3jiikg7kei2fn2ooulsvq9ffv.apps.googleusercontent.com";
+const CLIENT_ID="346034995979-rc78oggnhmhcg68t4eo0kbl7enhite2p.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
-const {todoSchema, Todo, dsa}=require( "./dsa.js");
-
-var baccha;
-console.log(dsa);
+const {User, Ds, Ques , DataStructure}=require( "./dsa.js");
 
 
-mongoose.connect("mongodb+srv://Paras:Paras%402001@cluster0.9t5bt.mongodb.net/todoDB")
+
+mongoose.connect("mongodb+srv://Paras:Paras%402001@cluster0.9t5bt.mongodb.net/codingKaroDB")
 var conn = mongoose.connection;
-
-
-
-
-
-const listSchema={
- name:String,
- items:[todoSchema]
-};
-
-const List=mongoose.model("List",listSchema);
 
 
 
@@ -49,7 +36,7 @@ app.post("/login" , (req, res)=>{
     let token =req.body.token;
 
 
-    console.log("2"+token);
+   
         async function verify() {
         const ticket = await client.verifyIdToken({
             idToken: token,
@@ -58,7 +45,7 @@ app.post("/login" , (req, res)=>{
         const payload = ticket.getPayload();
         const userid = payload['sub'];
         baccha=payload;
-        console.log(payload);
+     
         }
         verify().
         then(()=>{
@@ -77,8 +64,22 @@ app.get("/profile",checkAuthenticated,(req,res)=>{
 
    let user=req.user;
     
-   res.render("profile" ,{title:user.name});
-
+  
+    User.findOne({id:user.sub} , (err , foundUser)=>{
+        if(err) console.log(err);
+        else{
+            if(foundUser){ res.render("profile" , {title:foundUser.name})}
+            else{
+                const NewUser = new User({
+                    name:user.name,
+                    id:user.sub,
+                    items:DataStructure
+                })
+               NewUser.save();
+               res.redirect("/profile");
+            }
+        }
+    })
    
 })
 
@@ -86,26 +87,27 @@ app.get("/profile",checkAuthenticated,(req,res)=>{
 
 
 
-app.get("/:id",checkAuthenticated,(req,res)=>{
+app.get("/profile/:id",checkAuthenticated,(req,res)=>{
     
     var id=req.params.id;
     let user=req.user;
-    var id1=user.sub;
-     console.log(dsa[id])
-    List.findOne({name:(id1+id)},(err,foundList)=>{
-        if(err) console.log(err)
-        else{ if(foundList){ console.log(foundList.items);res.render("list",{title:id,todos:foundList.items, rout:"/"+id})}
-            else {
-                const list=new List({
-                    name:(id1+id),
-                    items:dsa[id]
-                });
-                
-                list.save();
-                res.redirect("/"+id);
-            }} 
-
+    let array;
+    User.findOne({id:user.sub}, (err , foundUser )=>{
+        if(err) console.log(err);
+        else{
+          if(!foundUser) {res.redirect("/profile"+id);}
+        
+          else{
+            
+        foundUser.items.forEach((item)=>{if(item.name==id) {array=item.items} });
+           
+         res.render("list" , {title:id , array:array });
+          }
+        }
     })
+
+  
+    
 })
 
 
