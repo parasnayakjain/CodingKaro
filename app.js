@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID="346034995979-rc78oggnhmhcg68t4eo0kbl7enhite2p.apps.googleusercontent.com";
+const CLIENT_ID="196256140389-eub6bqb3jiikg7kei2fn2ooulsvq9ffv.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
 const {todoSchema, Todo,listString}=require( "./string.js");
 
