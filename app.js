@@ -5,6 +5,7 @@ const app=express();
 const mongoose=require("mongoose");
 const { redirect } = require("express/lib/response");
 const time=require(__dirname+"/time.js");
+require("dotenv").config();
 app.use(bp.urlencoded({extended:true}))
 app.set("view engine","ejs");
 app.use(express.static("public"));
@@ -13,20 +14,22 @@ const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID="196256140389-eub6bqb3jiikg7kei2fn2ooulsvq9ffv.apps.googleusercontent.com";
+const CLIENT_ID=process.env.GoogleAuthHeroku;
+
 const client = new OAuth2Client(CLIENT_ID);
 const {User, Ds, Ques , DataStructure}=require( "./dsa.js");
 
 
 
-mongoose.connect("mongodb+srv://Paras:Paras%402001@cluster0.9t5bt.mongodb.net/codingKaroDB")
+mongoose.connect(process.env.MONGO);
 var conn = mongoose.connection;
 
 
 
 app.get("/",(req,res)=>{
 
-    res.render("signIn");
+    console.log(CLIENT_ID);
+    res.render("signIn", {GoogleAuth:CLIENT_ID});
     
 })
 
@@ -120,7 +123,7 @@ function checkAuthenticated(req, res, next){
     async function verify() {
         const ticket = await client.verifyIdToken({
             idToken: token,
-            audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+            audience: CLIENT_ID,  
         });
         const payload = ticket.getPayload();
         user.name = payload.name;
