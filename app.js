@@ -145,7 +145,7 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
         }
     })
     
-    res.redirect("/profile"+id)
+    res.redirect("/profile/"+id)
   
 })
 
