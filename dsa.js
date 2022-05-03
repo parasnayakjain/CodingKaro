@@ -35,7 +35,21 @@ const User =mongoose.model(
  
  const QuesString1=new Ques(
     {
-        name:"Reverse String",
+        name:"Reverse String1",
+        gfgURL:"https://leetcode.com/problems/reverse-string/",
+        isDone:false
+    }
+ );
+ const QuesString2=new Ques(
+    {
+        name:"Reverse String2",
+        gfgURL:"https://leetcode.com/problems/reverse-string/",
+        isDone:false
+    }
+ );
+ const QuesString3=new Ques(
+    {
+        name:"Reverse String3",
         gfgURL:"https://leetcode.com/problems/reverse-string/",
         isDone:false
     }
@@ -43,19 +57,19 @@ const User =mongoose.model(
 const string = new Ds(
     {
         name:"string",
-        items:[QuesString1,QuesString1,QuesString1,QuesString1]
+        items:[QuesString1,QuesString2,QuesString3]
     }
 );
 const Array = new Ds(
     {
         name:"array",
-        items:[QuesString1,QuesString1,QuesString1,QuesString1]
+        items:[QuesString1,QuesString2,QuesString3]
     }
 );
 const Matrix = new Ds(
     {
         name:"matrix",
-        items:[QuesString1,QuesString1,QuesString1,QuesString1]
+        items:[QuesString1,QuesString2,QuesString3]
     }
 );
 

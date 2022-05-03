@@ -2,6 +2,7 @@ const express=require("express");
 const bp=require("body-parser");
 const ejs=require("ejs");
 const app=express();
+
 const mongoose=require("mongoose");
 const { redirect } = require("express/lib/response");
 const time=require(__dirname+"/time.js");
@@ -10,16 +11,18 @@ app.use(bp.urlencoded({extended:true}))
 app.set("view engine","ejs");
 app.use(express.static("public"));
 app.use(express.static(__dirname + '/public'));
+app.use(bp.urlencoded({extended: true}));
 const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID=process.env.GoogleAuthHeroku;
+const CLIENT_ID=process.env.GoogleAuthLocal;
 
 const client = new OAuth2Client(CLIENT_ID);
 const {User, Ds, Ques , DataStructure}=require( "./dsa.js");
 
-
+ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+ 
 
 mongoose.connect(process.env.MONGO);
 var conn = mongoose.connection;
@@ -111,6 +114,39 @@ app.get("/profile/:id",checkAuthenticated,(req,res)=>{
 
   
     
+})
+
+app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
+    const id=req.params.id;
+      const a=req.body;
+      let user=req.user;
+    
+     let done= req.body.done;
+     if(done) quesname=done;
+     let preview=req.body.preview;
+     if(preview) quesname=preview;
+     
+     console.log(quesname);
+    User.findOne({id:user.sub} , (err , foundUser)=>{
+        if(err) console.log(err);
+        else{
+            if(!foundUser) {res.redirect("/profile"+id);}
+            else{
+                let array=[];
+                foundUser.items.forEach((item)=>{if(item.name==id){array=item.items}});
+                 
+                   array.forEach((ques)=>{ if(ques.id==quesname){if(done){ques.isDone=true; console.log("done");} } } )
+                
+                foundUser.items.forEach((item)=>{if(item.name==id){item.items=array}});
+                   
+                   foundUser.save();
+                  
+            }
+        }
+    })
+    
+    res.redirect("/profile"+id)
+  
 })
 
 

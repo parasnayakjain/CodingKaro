@@ -11,8 +11,10 @@ html {
   }
   
   .box {
+   
     max-width: 400px;
     margin: 50px auto;
+   
     margin-bottom: 1px;
     background: white;
     border-radius: 5px;
@@ -25,22 +27,19 @@ html {
   }
   
   .item {
+    position: relative;
     min-height: 70px;
     display: flex;
     align-items: center;
     border-bottom: 1px solid #F1F1F1;
+    padding: 0;
+
   }
   
  
   
-  input:checked+p {
-    text-decoration: line-through;
-    text-decoration-color: #A683E3;
-  }
-  
-  input[type="checkbox"] {
-    margin: 30px;
-  }
+
+
   
   p {
     margin: 0;
@@ -50,52 +49,25 @@ html {
     color: #00204a;
   }
   
-  form.item {
-    text-align: center;
-    margin-left: 20px;
-  }
+ 
   
   button {
-    min-height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    border-color: transparent;
-    background-color: #3910ee;
-    color: #fff;
-    font-size: 40px;
-    padding-bottom: 0px;
-    border-width: 0;
-    margin-left: 98px;
+    
+    margin: 0;
+      color:rgb(245, 237, 237);
+      background-color: rgb(15, 14, 14);
+      padding: 0;
+      width: 45px;
+      height:40px;
+      border-radius: 4px;
       
   }
+  .button{
+    position: absolute;
+    left: 220px;
   
-  input[type="text"] {
-    text-align: center;
-    height: 40px;
-    top: 10px;
-    border: none;
-    background: white;
-    font-size: 20px;
-    font-weight: 200;
-    width: 213px;
-    margin-left: 10px;
-    margin-top: 0%;
-    border: 1px rgb(165, 164, 164) solid;
-    
   }
   
-  input[type="text"]:focus {
-    outline: none;
-    border: black 2px solid;
-    box-shadow: inset 0 -2px 0 0 #252527;
-   
-  }
-  
-  ::placeholder {
-    color: rgb(163, 162, 162);
-   
-    opacity: 1px;
-  }
   
   footer {
     color: white;
@@ -107,4 +79,9 @@ html {
     text-align: center;
     color: #00204a;
     font-size: large;
+  }
+
+  #red{
+   
+    background-color: rgb(85, 81, 81);
   }
