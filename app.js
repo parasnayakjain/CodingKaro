@@ -21,7 +21,7 @@ const CLIENT_ID=process.env.GoogleAuthHeroku;
 const client = new OAuth2Client(CLIENT_ID);
 const {User, Ds, Ques , DataStructure}=require( "./dsa.js");
 
- const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
  
 
 mongoose.connect(process.env.MONGO);
@@ -120,7 +120,7 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
     const id=req.params.id;
       const a=req.body;
       let user=req.user;
-    
+      var array=[];
      let done= req.body.done;
      if(done) quesname=done;
      let preview=req.body.preview;
@@ -132,19 +132,19 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
         else{
             if(!foundUser) {res.redirect("/profile"+id);}
             else{
-                let array=[];
+              
                 foundUser.items.forEach((item)=>{if(item.name==id){array=item.items}});
                  
-                   array.forEach((ques)=>{ if(ques.id==quesname){if(done){ques.isDone=true; console.log("done");} } } )
+                   array.forEach((ques)=>{ if(ques.id==quesname){if(done){ques.isDone = !ques.isDone; console.log("done");} } } )
                 
-                foundUser.items.forEach((item)=>{if(item.name==id){item.items=array}});
+                // foundUser.items.forEach((item)=>{if(item.name==id){item.items=array}});
                    
                    foundUser.save();
                   
             }
         }
     })
-    
+    console.log(array);
     res.redirect("/profile/"+id)
   
 })
