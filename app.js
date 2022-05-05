@@ -5,7 +5,7 @@ const app=express();
 
 const mongoose=require("mongoose");
 const { redirect } = require("express/lib/response");
-const time=require(__dirname+"/time.js");
+
 require("dotenv").config();
 app.use(bp.urlencoded({extended:true}))
 app.set("view engine","ejs");
@@ -16,7 +16,7 @@ const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID=process.env.GoogleAuthHeroku;
+const CLIENT_ID=process.env.GoogleAuthLocal;
 
 const client = new OAuth2Client(CLIENT_ID);
 const {User, Ds, Ques , DataStructure}=require( "./dsa.js");
@@ -31,7 +31,7 @@ var conn = mongoose.connection;
 
 app.get("/",(req,res)=>{
 
-    console.log(CLIENT_ID);
+
     res.render("signIn", {GoogleAuth:CLIENT_ID});
     
 })
@@ -107,7 +107,7 @@ app.get("/profile/:id",checkAuthenticated,(req,res)=>{
             
         foundUser.items.forEach((item)=>{if(item.name==id) {array=item.items} });
            
-        console.log(array);
+     
          res.render("questionList" , {topic:id , array:array });
           }
         }
@@ -128,7 +128,7 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
      let review=req.body.review;
      if(review) quesname=review;
      
-     console.log(quesname);
+  
     User.findOne({id:user.sub} , (err , foundUser)=>{
         if(err) console.log(err);
         else{
@@ -146,7 +146,7 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
             }
         }
     })
-    console.log(array);
+  
     res.redirect("/profile/"+id)
   
 })
