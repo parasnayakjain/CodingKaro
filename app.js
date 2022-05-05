@@ -19,8 +19,8 @@ const {OAuth2Client} = require('google-auth-library');
 const CLIENT_ID=process.env.GoogleAuthHeroku;
 
 const client = new OAuth2Client(CLIENT_ID);
-const {User, Ds, Ques , DataStructure}=require( "./dsa.js");
-
+const {DataStructure}=require( "./data/dsa");
+const {User}=require("./data/schema");
 
  
 
