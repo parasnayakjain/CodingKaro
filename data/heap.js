@@ -108,14 +108,7 @@ const QuesHeap1=new Ques(
         isReview:false
     }
  );
- const QuesHeap16=new Ques(
-    {
-        name:"",
-        gfgURL:"",
-        isDone: false,
-        isReview:false
-    }
- );
+
  const QuesHeap17=new Ques(
     {
         name:"Convert BST to Min Heapv",
@@ -154,7 +147,7 @@ const QuesHeap1=new Ques(
     {
         name:"Heap",
         items:[QuesHeap1 ,QuesHeap2 , QuesHeap3 ,QuesHeap4 ,QuesHeap5, QuesHeap6, QuesHeap7, QuesHeap9
-        ,QuesHeap10 ,QuesHeap12 , QuesHeap13 ,QuesHeap14 ,QuesHeap15, QuesHeap16, QuesHeap17,QuesHeap18, QuesHeap19,QuesHeap20 ]
+        ,QuesHeap10 ,QuesHeap12 , QuesHeap13 ,QuesHeap14 ,QuesHeap15, QuesHeap17,QuesHeap18, QuesHeap19,QuesHeap20 ]
     }
 );
  
