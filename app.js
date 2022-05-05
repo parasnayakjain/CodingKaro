@@ -74,7 +74,7 @@ app.get("/profile",checkAuthenticated,(req,res)=>{
     User.findOne({id:user.sub} , (err , foundUser)=>{
         if(err) console.log(err);
         else{
-            if(foundUser){ res.render("profile" , {title:foundUser.name})}
+            if(foundUser){ res.render("mainPage" , {title:foundUser.name})}
             else{
                 const NewUser = new User({
                     name:user.name,
@@ -107,7 +107,8 @@ app.get("/profile/:id",checkAuthenticated,(req,res)=>{
             
         foundUser.items.forEach((item)=>{if(item.name==id) {array=item.items} });
            
-         res.render("list" , {title:id , array:array });
+        console.log(array);
+         res.render("questionList" , {topic:id , array:array });
           }
         }
     })
@@ -122,9 +123,10 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
       let user=req.user;
       var array=[];
      let done= req.body.done;
+     
      if(done) quesname=done;
-     let preview=req.body.preview;
-     if(preview) quesname=preview;
+     let review=req.body.review;
+     if(review) quesname=review;
      
      console.log(quesname);
     User.findOne({id:user.sub} , (err , foundUser)=>{
@@ -135,7 +137,7 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
               
                 foundUser.items.forEach((item)=>{if(item.name==id){array=item.items}});
                  
-                   array.forEach((ques)=>{ if(ques.id==quesname){if(done){ques.isDone = !ques.isDone; console.log("done");} } } )
+                   array.forEach((ques)=>{ if(ques.id==quesname){if(done){ques.isDone = !ques.isDone; console.log("done");} if(review) ques.isReview= !ques.isReview; console.log("review");} } )
                 
                 // foundUser.items.forEach((item)=>{if(item.name==id){item.items=array}});
                    
