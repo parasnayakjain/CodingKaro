@@ -16,7 +16,7 @@ const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID=process.env.GoogleAuthHeroku;
+const CLIENT_ID=process.env.GoogleAuthLocal;
 
 const client = new OAuth2Client(CLIENT_ID);
 const {DataStructure}=require( "./data/dsa");
@@ -132,8 +132,8 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
     User.findOne({id:user.sub} , (err , foundUser)=>{
         if(err) console.log(err);
         else{
-        
-        
+            if(!foundUser) {res.redirect("/profile"+id);}
+            else{
               
                 foundUser.items.forEach((item)=>{if(item.name==id){array=item.items}});
                  
@@ -142,12 +142,15 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
                 // foundUser.items.forEach((item)=>{if(item.name==id){item.items=array}});
                    
                    foundUser.save();
+
+                   console.log(array);
+                   res.render("questionList" , {topic:id , array:array });
                   
-         
+            }
         }
     })
   
-    res.render("/questionList" , {topic:id , array:array})
+    
   
 })
 
