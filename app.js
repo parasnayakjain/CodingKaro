@@ -147,7 +147,7 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
         }
     })
   
-    res.redirect("/profile/"+id)
+    res.render("/questionList" , {topic:id , array:array})
   
 })
 
