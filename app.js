@@ -132,8 +132,8 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
     User.findOne({id:user.sub} , (err , foundUser)=>{
         if(err) console.log(err);
         else{
-            if(!foundUser) {res.redirect("/profile"+id);}
-            else{
+        
+        
               
                 foundUser.items.forEach((item)=>{if(item.name==id){array=item.items}});
                  
@@ -143,7 +143,7 @@ app.post("/profile/:id" ,checkAuthenticated, (req,res)=>{
                    
                    foundUser.save();
                   
-            }
+         
         }
     })
   
