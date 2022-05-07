@@ -16,7 +16,7 @@ const cookieParser = require('cookie-parser')
 app.use(express.json());
 app.use(cookieParser());
 const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID=process.env.GoogleAuthLocal;
+const CLIENT_ID=process.env.GoogleAuthHeroku;
 
 const client = new OAuth2Client(CLIENT_ID);
 const {DataStructure}=require( "./data/dsa");
